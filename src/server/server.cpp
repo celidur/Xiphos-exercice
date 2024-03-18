@@ -6,8 +6,10 @@
 #include <sys/socket.h>
 #include <sys/un.h>
 #include <unistd.h>
+#include <algorithm>
+#include <array>
 
-const std::string VERSION = "3cdd5d19178a54d2e51b5098d43b57571241d0ab"; // Example git version
+
 std::atomic<bool> running(true);
 
 int SocketServer::server_fd = -1;
@@ -71,11 +73,38 @@ void SocketServer::handleClient(int client_socket) {
     std::string command(buffer);
 
     if (command == "VERSION") {
-        send(client_socket, VERSION.c_str(), VERSION.size(), 0);
+        std::string git_version = getCurrentGitCommit();
+        send(client_socket, git_version.c_str(), git_version.size(), 0);
     } else {
         std::string msg = "REJECTED";
         send(client_socket, msg.c_str(), msg.size(), 0);
     }
 
     close(client_socket);
+}
+
+
+std::string SocketServer::exec(const char* cmd) {
+    std::array<char, 128> buffer;
+    std::string result;
+    std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(cmd, "r"), pclose);
+    if (!pipe) {
+        throw std::runtime_error("popen() failed!");
+    }
+    while (fgets(buffer.data(), buffer.size(), pipe.get()) != nullptr) {
+        result += buffer.data();
+    }
+    return result;
+}
+
+std::string SocketServer::getCurrentGitCommit() {
+    try {
+        std::string gitCommitHash = exec("git rev-parse HEAD");
+        // Remove the newline character at the end of the hash
+        gitCommitHash.erase(std::remove(gitCommitHash.begin(), gitCommitHash.end(), '\n'), gitCommitHash.end());
+        return gitCommitHash;
+    } catch (const std::runtime_error& e) {
+        std::cerr << "Error getting current Git commit: " << e.what() << std::endl;
+        return "";
+    }
 }

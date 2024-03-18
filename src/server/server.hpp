@@ -15,11 +15,13 @@ public:
     static int server_fd;
 
 private:
-    std::string socketPath;
-    std::vector<std::thread> threads;
-
     void setupSocket();
     void handleClient(int client_socket);
+    std::string exec(const char* cmd);
+    std::string getCurrentGitCommit();
+
+    std::string socketPath;
+    std::vector<std::thread> threads;
 };
 
 #endif // SOCKET_H
