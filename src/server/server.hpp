@@ -20,6 +20,7 @@ private:
     std::string exec(const char* cmd);
     std::string getCurrentGitCommit();
 
+    std::string commit_version;
     std::string socketPath;
     std::vector<std::thread> threads;
 };

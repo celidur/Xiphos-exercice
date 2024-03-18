@@ -16,6 +16,7 @@ int SocketServer::server_fd = -1;
 
 SocketServer::SocketServer(const std::string& socketPath) : socketPath(socketPath) {
     setupSocket();
+    commit_version = getCurrentGitCommit();
 }
 
 SocketServer::~SocketServer() {
@@ -73,8 +74,7 @@ void SocketServer::handleClient(int client_socket) {
     std::string command(buffer);
 
     if (command == "VERSION") {
-        std::string git_version = getCurrentGitCommit();
-        send(client_socket, git_version.c_str(), git_version.size(), 0);
+        send(client_socket, commit_version.c_str(), commit_version.size(), 0);
     } else {
         std::string msg = "REJECTED";
         send(client_socket, msg.c_str(), msg.size(), 0);
