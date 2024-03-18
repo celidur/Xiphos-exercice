@@ -27,9 +27,15 @@ void SocketClient::connectToServer() {
 }
 
 void SocketClient::sendMessage(const std::string& message) {
-    send(sock, message.c_str(), message.size(), 0);
+    if (send(sock, message.c_str(), message.size(), 0) < 0) {
+        std::cerr << "Send failed to the server failed" << std::endl;
+        exit(EXIT_FAILURE);
+    }
     char buffer[1024] = {0};
-    read(sock, buffer, 1024);
+    if (read(sock, buffer, 1024) < 0) {
+        std::cerr << "Read from the server failed" << std::endl;
+        exit(EXIT_FAILURE);
+    }
     std::cout << buffer << std::endl;
 
     close(sock);

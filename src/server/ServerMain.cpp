@@ -14,6 +14,7 @@ void signalHandler([[maybe_unused]] int _signal) {
 }
 
 int main(int argc, char const* argv[]) {
+    // argument : <socket_path>
     if (argc != 2) {
         std::cerr << "Usage: " << argv[0] << " <socket_path>" << std::endl;
         return EXIT_FAILURE;

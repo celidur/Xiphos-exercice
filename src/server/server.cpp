@@ -70,17 +70,26 @@ void SocketServer::setupSocket() {
 
 void SocketServer::handleClient(int client_socket) {
     char buffer[1024] = {0};
-    read(client_socket, buffer, 1024);
+    if (read(client_socket, buffer, 1024) < 0) {
+        std::cerr << "Read from the client failed" << std::endl;
+        close(client_socket);
+        return;
+    }
     std::string command(buffer);
 
     if (command == "VERSION") {
-        send(client_socket, commit_version.c_str(), commit_version.size(), 0);
+        sendMessage(client_socket, commit_version);
     } else {
         std::string msg = "REJECTED";
-        send(client_socket, msg.c_str(), msg.size(), 0);
+        sendMessage(client_socket, msg);
     }
-
     close(client_socket);
+}
+
+void SocketServer::sendMessage(int client_socket, const std::string& message) {
+    if (send(client_socket, message.c_str(), message.size(), 0) < 0) {
+        std::cerr << "Send to the client failed" << std::endl;
+    }
 }
 
 

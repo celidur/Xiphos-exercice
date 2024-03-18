@@ -17,6 +17,7 @@ public:
 private:
     void setupSocket();
     void handleClient(int client_socket);
+    void sendMessage(int client_socket, const std::string& message);
     std::string exec(const char* cmd);
     std::string getCurrentGitCommit();
 

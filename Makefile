@@ -9,7 +9,7 @@ FILES_CLIENT = $(wildcard $(SRC_DIR)/client/*.cpp)
 OBJECTS_CLIENT = $(FILES_CLIENT:$(SRC_DIR)/client/%.cpp=$(BUILD_DIR)/client/%.o)
 
 CXX = g++
-CXX_FLAGS = -std=c++20 -Wall -Wextra -Werror -Wunused
+CXX_FLAGS = -std=c++17 -Wall -Wextra -Werror -Wunused
 
 all: client server
 
