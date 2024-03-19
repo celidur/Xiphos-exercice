@@ -18,7 +18,7 @@ This is a simple client-server application written in C++.
     - `ClientMain.cpp`: Main function to start the client.
 - `Makefile`: Automates the build process.
 
-## Build and Run
+## Build and Run from source
 
 ### Build the Application:
 
@@ -48,3 +48,32 @@ where `<socket_path>` is the path to the server socket and `<message>` is the me
 
 if the message is `VERSION`, the server will return the version of the server. Else, the server will return `REJECTED`
 
+## Build and Run from Docker
+
+### Build the Docker Image:
+
+Prerequisites:
+
+- Docker installed on your machine.
+
+```bash
+docker build -t cpp-app .
+```
+
+### Run the app in Docker:
+
+
+Create a volume to store the socket file:
+```bash
+docker volume create socket_volume
+```
+
+Run the server:
+```bash
+docker run -v socket_volume:/app/socket --rm cpp-app server /app/socket/<socket_name>
+```
+
+Run the client:
+```bash
+docker run -v socket_volume:/app/socket --rm cpp-app client /app/socket/<socket_name> <message>
+```

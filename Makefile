@@ -14,10 +14,10 @@ CXX_FLAGS = -std=c++17 -Wall -Wextra -Werror -Wunused
 all: client server
 
 client: $(OBJECTS_CLIENT)
-	$(CXX) $(CXX_FLAGS) -o $@ $^ -lstdc++
+	$(CXX) $(CXX_FLAGS) -o $@ $^ -lstdc++ -lpthread
 
 server: $(OBJECTS_SERVER)
-	$(CXX) $(CXX_FLAGS) -o $@ $^ -lstdc++
+	$(CXX) $(CXX_FLAGS) -o $@ $^ -lstdc++ -lpthread
 
 $(BUILD_DIR)/client/%.o: $(SRC_DIR)/client/%.cpp
 	@mkdir -p $(BUILD_DIR)/client
@@ -28,4 +28,4 @@ $(BUILD_DIR)/server/%.o: $(SRC_DIR)/server/%.cpp
 	$(CXX) $(CXX_FLAGS) -c $< -o $@
 
 clean:
-	rm -rf $(BUILD_DIR)
+	rm -rf $(BUILD_DIR) client server
