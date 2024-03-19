@@ -8,6 +8,7 @@
 #include <unistd.h>
 #include <algorithm>
 #include <array>
+#include <sys/stat.h>
 
 
 std::atomic<bool> running(true);
@@ -43,6 +44,14 @@ void SocketServer::run() {
 }
 
 void SocketServer::setupSocket() {
+    // create directory for socket file
+    std::string socketDir = socketPath.substr(0, socketPath.find_last_of('/'));
+    if (mkdir(socketDir.c_str(), 0777) == -1) {
+        if (errno != EEXIST) {
+            perror("mkdir");
+            exit(EXIT_FAILURE);
+        }
+    }
     server_fd = socket(AF_UNIX, SOCK_STREAM, 0);
     if (server_fd == 0) {
         perror("socket failed");
