@@ -12,10 +12,10 @@ This is a simple client-server application written in C++.
 
 - Server:
     - `server.cpp`, `server.h`: : Server class definition and implementation.
-    - `ServerMain.cpp`: Main function to start the server.
+    - `server-main.cpp`: Main function to start the server.
 - Client:
     - `client.cpp`, `client.h`: Client class definition and implementation.
-    - `ClientMain.cpp`: Main function to start the client.
+    - `client-main.cpp`: Main function to start the client.
 - `Makefile`: Automates the build process.
 
 ## Build and Run from source
